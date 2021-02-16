@@ -26,10 +26,10 @@ stages:
         steps:
         - checkout: self
         - script: |
-            workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment/"
             terraform init
             terraform plan
             terraform apply
+          workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment/"
         - task: DownloadPipelineArtifact@2
           inputs:
               buildType: "current"
