@@ -14,6 +14,7 @@ stages:
            inputs:
               command: 'publish'
               projects: '**/*.csproj'
+              zipAfterPublish: true
          - task: PublishPipelineArtifact@1
            inputs:
             targetPath: "$(System.DefaultWorkingDirectory)"
