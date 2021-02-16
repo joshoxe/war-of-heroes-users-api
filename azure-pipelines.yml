@@ -28,7 +28,7 @@ stages:
         - script: |
             terraform init
             terraform plan
-            terraform apply
+            terraform apply -auto-approve
           workingDirectory: "$(System.DefaultWorkingDirectory)/WarOfHeroesAPI/Deployment/"
           env:
             ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION-ID)
