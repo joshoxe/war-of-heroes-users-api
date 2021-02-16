@@ -29,7 +29,7 @@ stages:
             terraform init
             terraform plan
             terraform apply
-          workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment/"
+          workingDirectory: "$(System.DefaultWorkingDirectory)/WarOfHeroesAPI/Deployment/"
         - task: DownloadPipelineArtifact@2
           inputs:
               buildType: "current"
