@@ -26,6 +26,7 @@ stages:
         steps:
         - checkout: self
         - script: |
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment/"
             terraform init
             terraform plan
             terraform apply
