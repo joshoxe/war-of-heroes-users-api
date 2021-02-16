@@ -22,13 +22,18 @@ stages:
     jobs:
       - job: Deploy
         steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
+        - checkout: self
+        - script: |
+            terraform init
+            terraform plan
+            terraform apply
+        - task: DownloadPipelineArtifact@2
+          inputs:
               buildType: "current"
               artifactName: "drop"
               targetPath: "$(System.DefaultWorkingDirectory)"
-          - task: AzureRmWebAppDeployment@4
-            inputs:
+        - task: AzureRmWebAppDeployment@4
+          inputs:
               ConnectionType: "AzureRM"
               azureSubscription: "warOfHeroes"
               appType: "webApp"
