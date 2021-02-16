@@ -35,7 +35,7 @@ stages:
         - task: AzureRmWebAppDeployment@4
           inputs:
               ConnectionType: "AzureRM"
-              azureSubscription: "warOfHeroes"
+              azureSubscription: "42c403e8-bc13-46ed-9007-9ab9b1509824"
               appType: "webApp"
               WebAppName: "warOfHeroes"
               packageForLinux: "$(System.DefaultWorkingDirectory)/WarOfHeroesUserAPI.zip"
