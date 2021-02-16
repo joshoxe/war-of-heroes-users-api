@@ -1,0 +1,36 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-18.04'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAPI
+        steps:
+         - checkout: self
+         - task: DotNetCoreCLI@2
+           inputs:
+              command: 'build'
+         - task: PublishPipelineArtifact@1
+           inputs:
+            targetPath: "$(System.DefaultWorkingDirectory)/publish_output"
+            artifact: "drop"
+            publishLocation: "pipeline"
+  - stage: Deploy
+    jobs:
+      - job: Deploy
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: "current"
+              artifactName: "drop"
+              targetPath: "$(System.DefaultWorkingDirectory)"
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: "AzureRM"
+              azureSubscription: "Visual Studio Enterprise Subscription"
+              appType: "webApp"
+              WebAppName: "warOfHeroes"
+              packageForLinux: "$(System.DefaultWorkingDirectory)/WarOfHeroesUserAPI.zip"
