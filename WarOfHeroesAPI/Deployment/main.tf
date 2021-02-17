@@ -6,6 +6,11 @@ terraform {
       version = ">= 2.26"
     }
   }
+
+backend "azurerm" {
+  container_name = "tfstate28596"
+  key            = "tf.tfstate"
+  }
 }
 
 provider "azurerm" {
