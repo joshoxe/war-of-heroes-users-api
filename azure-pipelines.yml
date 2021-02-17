@@ -33,7 +33,7 @@ stages:
           env:
             ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION-ID)
             ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)      
-            ARM_ACCESS_KEY: $(TERRAFORM-ACCESS-KEY)        
+            ARM_ACCESS_KEY: $(TF-ACCESS-KEY)        
             ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
             ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
         - task: DownloadPipelineArtifact@2
