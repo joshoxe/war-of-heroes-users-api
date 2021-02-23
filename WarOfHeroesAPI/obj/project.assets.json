@@ -33,6 +33,18 @@
           "lib/netstandard2.0/FluentValidation.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google/3.1.12": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
@@ -374,6 +386,21 @@
         "lib/net5.0/FluentValidation.xml",
         "lib/netstandard2.0/FluentValidation.dll",
         "lib/netstandard2.0/FluentValidation.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/3.1.12": {
+      "sha512": "4VSvW3AbtascudMcVhIyLPnlWSsSJlifZKYAx3evOVM0aNSTCIXqASFei7YcR2PUORopB+uhuIbv5Qr/6aQmEA==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/3.1.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.3.1.12.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.CSharp/4.7.0": {
@@ -1090,6 +1117,7 @@
     ".NETCoreApp,Version=v3.1": [
       "EntityFramework >= 6.4.4",
       "FluentValidation >= 9.4.0",
+      "Microsoft.AspNetCore.Authentication.Google >= 3.1.12",
       "Newtonsoft.Json >= 12.0.3"
     ]
   },
@@ -1137,6 +1165,10 @@
           "FluentValidation": {
             "target": "Package",
             "version": "[9.4.0, )"
+          },
+          "Microsoft.AspNetCore.Authentication.Google": {
+            "target": "Package",
+            "version": "[3.1.12, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",

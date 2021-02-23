@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "gslScZ1/iEnQ0Jf7r65HtIaOAogrlSc2y7uQxIUfL880b9zI9fFGBKtaSKq4Um8NgQnaN1FV7iXeeTCSmhWEcg==",
+  "dgSpecHash": "kLtY1YD2uNTEbSybaxfUC6OmDPSssZnGptR8saIpHh50io/Td7eiJ/dQC1QtmAo+bNJ/OubdzD/yy3nhWo60eg==",
   "success": true,
   "projectFilePath": "C:\\git\\war-of-heroes-api\\WarOfHeroesAPI\\WarOfHeroesUsersAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aJoshua\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\aJoshua\\.nuget\\packages\\fluentvalidation\\9.4.0\\fluentvalidation.9.4.0.nupkg.sha512",
+    "C:\\Users\\aJoshua\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\3.1.12\\microsoft.aspnetcore.authentication.google.3.1.12.nupkg.sha512",
     "C:\\Users\\aJoshua\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\aJoshua\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\aJoshua\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
