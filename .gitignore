@@ -355,3 +355,5 @@ MigrationBackup/
 Deployment/.terraform
 
 *.secrets.json
+/WarOfHeroesAPI/Deployment
+*/Debug/*
