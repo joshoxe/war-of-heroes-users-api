@@ -42,7 +42,7 @@ namespace WarOfHeroesAPI.Controllers
                 return BadRequest("Invalid login request");
             }
 
-
+            return Ok();
         }
     }
 }
