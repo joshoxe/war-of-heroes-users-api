@@ -13,11 +13,14 @@ stages:
          - task: DotNetCoreCLI@2
            inputs:
               command: 'publish'
+              arguments: "--output $(System.DefaultWorkingDirectory)/publish_output"
               projects: '**/*.csproj'
+              publishWebProjects: false
+              modifyOutputPath: true
               zipAfterPublish: true
          - task: PublishPipelineArtifact@1
            inputs:
-            targetPath: "$(System.DefaultWorkingDirectory)"
+            targetPath: "$(System.DefaultWorkingDirectory)/publish_output"
             artifact: "drop"
             publishLocation: "pipeline"
   - stage: Deploy
@@ -47,4 +50,4 @@ stages:
               azureSubscription: "warOfHeroes"
               appType: "webApp"
               WebAppName: "warOfHeroes"
-              packageForLinux: "$(System.DefaultWorkingDirectory)"
+              packageForLinux: "$(System.DefaultWorkingDirectory)/WarOfHeroesUsersAPI.zip"
