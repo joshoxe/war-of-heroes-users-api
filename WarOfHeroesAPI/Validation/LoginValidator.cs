@@ -13,7 +13,6 @@ namespace WarOfHeroesAPI.Validation
         public LoginValidator()
         {
             RuleFor(user => user.Username).NotNull().NotEmpty();
-            RuleFor(user => user.Password).NotNull().NotEmpty();
         }
     }
 }
