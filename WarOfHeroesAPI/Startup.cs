@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WarOfHeroesUsersAPI
 {
@@ -22,16 +24,21 @@ namespace WarOfHeroesUsersAPI
             services.AddControllers();
             services.AddAuthentication(options =>
                 {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddCookie(options => { options.LoginPath = "/user/login"; })
-                .AddGoogle(options =>
+                .AddJwtBearer(options =>
                 {
-                    var googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleAuthNSection["ClientId"];
-                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.Authority = "https://accounts.google.com";
+                    options.IncludeErrorDetails = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
                 });
 
         }
