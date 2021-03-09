@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authorization;
+using WarOfHeroesUsersAPI.Processing;
+using WarOfHeroesUsersAPI.Users.Models;
+using WarOfHeroesUsersAPI.Validation;
 
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WarOfHeroesUsersAPI.Controllers
 {
@@ -22,11 +13,43 @@ namespace WarOfHeroesUsersAPI.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        [Route("login")]
-        public IActionResult Login()
+        private readonly ILogger<UserController> _logger;
+        private readonly IUserProcessor<GoogleUser> _userProcessor;
+        private readonly IUserValidator _userValidator;
+
+        public UserController(ILogger<UserController> logger, IUserValidator userValidator,
+            IUserProcessor<GoogleUser> userProcessor)
         {
-            return Ok();
+            _logger = logger;
+            _userValidator = userValidator;
+            _userProcessor = userProcessor;
+        }
+
+        [Route("login")]
+        [HttpPost]
+        public IActionResult Login([FromBody] GoogleUser user)
+        {
+            _logger.LogInformation("Login endpoint called");
+
+            var userValidationResult = _userValidator.Validate(user);
+
+            if (!userValidationResult.IsValid)
+            {
+                _logger.LogError("Login failed to validate user: {user}, validation errors: {errors}", user,
+                    userValidationResult.Errors);
+
+                return BadRequest(userValidationResult.Errors);
+            }
+
+            var userProcessResult = _userProcessor.Process(user);
+
+            if (!userProcessResult.IsValid)
+            {
+                _logger.LogError("Login failed to process user, validation errors: {errors}", userProcessResult.Errors);
+                return BadRequest(userProcessResult.Errors);
+            }
+
+            return Ok(userProcessResult.User);
         }
     }
 }
-

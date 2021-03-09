@@ -6,6 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using WarOfHeroesUsersAPI.Processing;
+using WarOfHeroesUsersAPI.Users;
+using WarOfHeroesUsersAPI.Users.Models;
+using WarOfHeroesUsersAPI.Validation;
 
 namespace WarOfHeroesUsersAPI
 {
@@ -50,6 +54,9 @@ namespace WarOfHeroesUsersAPI
                     };
                 });
 
+            services.AddScoped<IUserValidator, GoogleUserValidator>();
+            services.AddScoped<IUserProcessor<GoogleUser>, GoogleUserProcessor>();
+            services.AddSingleton<IUserStore>(new UserStore());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
