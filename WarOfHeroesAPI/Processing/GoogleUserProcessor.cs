@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Users;
@@ -41,7 +42,7 @@ namespace WarOfHeroesUsersAPI.Processing
 
                 return userProcessingResult;
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 _logger.LogError("GoogleUserProcessor failed to process user: {googleUser}, exception: {e}", googleUser,
                     e);

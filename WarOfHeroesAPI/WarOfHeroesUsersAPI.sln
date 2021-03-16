@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WarOfHeroesUsersAPI", "WarOfHeroesUsersAPI.csproj", "{D62E0587-46A2-4C33-8D49-F17E96FA9587}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarOfHeroesUsersAPITests", "..\WarOfHeroesUsersAPITests\WarOfHeroesUsersAPITests.csproj", "{158594E3-9EC9-460F-9C06-C6F2EBE6444B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D62E0587-46A2-4C33-8D49-F17E96FA9587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D62E0587-46A2-4C33-8D49-F17E96FA9587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D62E0587-46A2-4C33-8D49-F17E96FA9587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158594E3-9EC9-460F-9C06-C6F2EBE6444B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158594E3-9EC9-460F-9C06-C6F2EBE6444B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158594E3-9EC9-460F-9C06-C6F2EBE6444B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158594E3-9EC9-460F-9C06-C6F2EBE6444B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

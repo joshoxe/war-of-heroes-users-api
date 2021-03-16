@@ -27,7 +27,7 @@ namespace WarOfHeroesUsersAPI.Controllers
 
         [Route("login")]
         [HttpPost]
-        public IActionResult Login([FromBody] GoogleUser user)
+        public ActionResult Login([FromBody] GoogleUser user)
         {
             _logger.LogInformation("Login endpoint called");
 
