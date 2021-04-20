@@ -4,6 +4,7 @@ using System.Linq;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using WarOfHeroesUsersAPI.Data.Entities;
 using WarOfHeroesUsersAPI.Processing;
 using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
@@ -41,16 +42,16 @@ namespace WarOfHeroesUsersAPITests.Processing
         [Test]
         public void TestProcessNewUserReturnsValidResult()
         {
-            var dbUser = new DbUser
+            var dbUser = new User
             {
                 FirstName = "test",
-                GoogleID = "test"
+                GoogleId = "test"
             };
             var result = _processor.Process(_validUser);
 
             Assert.IsTrue(result.IsValid);
             Assert.AreEqual(dbUser.FirstName, result.User.FirstName);
-            Assert.AreEqual(dbUser.GoogleID, result.User.GoogleID);
+            Assert.AreEqual(dbUser.GoogleId, result.User.GoogleId);
         }
     }
 }

@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Processing;
 using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
@@ -27,6 +29,7 @@ namespace WarOfHeroesUsersAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<UserContext>();
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -56,7 +59,7 @@ namespace WarOfHeroesUsersAPI
 
             services.AddScoped<IUserValidator, GoogleUserValidator>();
             services.AddScoped<IUserProcessor<GoogleUser>, GoogleUserProcessor>();
-            services.AddSingleton<IUserStore>(new UserStore());
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

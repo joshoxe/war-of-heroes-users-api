@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Processing;
 using WarOfHeroesUsersAPI.Users.Models;
 using WarOfHeroesUsersAPI.Validation;
@@ -15,14 +17,16 @@ namespace WarOfHeroesUsersAPI.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserProcessor<GoogleUser> _userProcessor;
+        private readonly IUserRepository _repository;
         private readonly IUserValidator _userValidator;
 
         public UserController(ILogger<UserController> logger, IUserValidator userValidator,
-            IUserProcessor<GoogleUser> userProcessor)
+            IUserProcessor<GoogleUser> userProcessor, IUserRepository repository)
         {
             _logger = logger;
             _userValidator = userValidator;
             _userProcessor = userProcessor;
+            _repository = repository;
         }
 
         [Route("login")]
@@ -50,6 +54,21 @@ namespace WarOfHeroesUsersAPI.Controllers
             }
 
             return Ok(userProcessResult.User);
+        }
+
+        [Route("{userId}")]
+        [HttpGet]
+        public ActionResult Get([FromRoute] int userId)
+        {
+            try
+            {
+                return Ok(_repository.GetUserById(userId));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unable to find user with ID {userId}", userId);
+                return BadRequest();
+            }
         }
     }
 }

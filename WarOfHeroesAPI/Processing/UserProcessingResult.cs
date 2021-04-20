@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WarOfHeroesUsersAPI.Data.Entities;
 using WarOfHeroesUsersAPI.Users.Models;
 
 namespace WarOfHeroesUsersAPI.Processing
@@ -7,6 +8,6 @@ namespace WarOfHeroesUsersAPI.Processing
     {
         public bool IsValid { get; set; }
         public ICollection<string> Errors { get; set; }
-        public DbUser User { get; set; }
+        public User User { get; set; }
     }
 }
