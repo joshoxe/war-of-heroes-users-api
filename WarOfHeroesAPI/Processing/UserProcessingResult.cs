@@ -8,6 +8,6 @@ namespace WarOfHeroesUsersAPI.Processing
     {
         public bool IsValid { get; set; }
         public ICollection<string> Errors { get; set; }
-        public User User { get; set; }
+        public Data.Entities.User User { get; set; }
     }
 }

@@ -12,13 +12,17 @@ namespace WarOfHeroesUsersAPI.Data
         {
             _config = config;
         }
+
         public DbSet<User> Users { get; set; }
+        public virtual DbSet<UserHeroDeck> UserHeroDecks { get; set; }
+
+        public virtual DbSet<UserHeroInventory> UserHeroInventories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("UserDb"));
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(_config.GetConnectionString("UserDb"));
         }
     }
 }

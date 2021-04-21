@@ -7,7 +7,7 @@ namespace WarOfHeroesUsersAPI.Data.Entities
         public int Id { get; set; }
         public string GoogleId { get; set; }
         public string FirstName { get; set; }
-        public ICollection<UserHeroInventory> Inventory { get; set; }
-        public ICollection<UserHeroDeck> Deck { get; set; }
+        public virtual ICollection<UserHeroInventory> UserHeroInventories { get; set; }
+       // public virtual List<UserHeroDeck> UserHeroDecks { get; set; }
     }
 }

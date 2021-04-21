@@ -56,17 +56,33 @@ namespace WarOfHeroesUsersAPI.Controllers
             return Ok(userProcessResult.User);
         }
 
+
+        [AllowAnonymous] // Turn off
         [Route("{userId}")]
         [HttpGet]
         public ActionResult Get([FromRoute] int userId)
         {
             try
             {
-                return Ok(_repository.GetUserById(userId));
+                var user = _repository.GetUserById(userId);
+                return Ok(user);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Unable to find user with ID {userId}", userId);
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
+        [Route("")]
+        [HttpGet]
+        public ActionResult Get()
+        {
+            try {
+                return Ok(_repository.GetAllUsers());
+            } catch(Exception e) {
+                _logger.LogError(e, "Unable to find users");
                 return BadRequest();
             }
         }

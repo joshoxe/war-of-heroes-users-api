@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WarOfHeroesUsersAPI.Data;
 
 namespace WarOfHeroesUsersAPI.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20210421145119_CustomBuilder")]
+    partial class CustomBuilder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace WarOfHeroesUsersAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserHeroDecks");
+                    b.ToTable("UserHeroDeck");
                 });
 
             modelBuilder.Entity("WarOfHeroesUsersAPI.Data.Entities.UserHeroInventory", b =>
@@ -74,20 +76,22 @@ namespace WarOfHeroesUsersAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserHeroInventories");
+                    b.ToTable("UserHeroInventory");
                 });
 
             modelBuilder.Entity("WarOfHeroesUsersAPI.Data.Entities.UserHeroDeck", b =>
                 {
-                    b.HasOne("WarOfHeroesUsersAPI.Data.Entities.User", null)
-                        .WithMany("UserHeroDecks")
+                    b.HasOne("WarOfHeroesUsersAPI.Data.Entities.User", "User")
+                        .WithMany("Deck")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WarOfHeroesUsersAPI.Data.Entities.UserHeroInventory", b =>
                 {
                     b.HasOne("WarOfHeroesUsersAPI.Data.Entities.User", "User")
-                        .WithMany("UserHeroInventories")
+                        .WithMany("Inventory")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -95,9 +99,9 @@ namespace WarOfHeroesUsersAPI.Migrations
 
             modelBuilder.Entity("WarOfHeroesUsersAPI.Data.Entities.User", b =>
                 {
-                    b.Navigation("UserHeroDecks");
+                    b.Navigation("Deck");
 
-                    b.Navigation("UserHeroInventories");
+                    b.Navigation("Inventory");
                 });
 #pragma warning restore 612, 618
         }

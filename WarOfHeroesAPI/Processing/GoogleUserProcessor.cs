@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Data.Entities;
-using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 
 namespace WarOfHeroesUsersAPI.Processing
@@ -41,14 +39,13 @@ namespace WarOfHeroesUsersAPI.Processing
             }
         }
 
-        private User AddNewUser(GoogleUser googleUser)
+        private Data.Entities.User AddNewUser(GoogleUser googleUser)
         {
-            var user = new User
+            var user = new Data.Entities.User
             {
                 FirstName = googleUser.FirstName,
                 GoogleId = googleUser.ID,
-                Deck = new List<UserHeroDeck>(),
-                Inventory = new List<UserHeroInventory>
+                UserHeroInventories = new List<UserHeroInventory>
                 {
                     new UserHeroInventory
                     {

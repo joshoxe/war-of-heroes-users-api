@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using WarOfHeroesUsersAPI.Controllers;
+using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Data.Entities;
 using WarOfHeroesUsersAPI.Processing;
 using WarOfHeroesUsersAPI.Users.Models;
@@ -23,7 +24,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
         {
             _validator = A.Fake<IUserValidator>();
             _processor = A.Fake<IUserProcessor<GoogleUser>>();
-            _controller = new UserController(A.Fake<ILogger<UserController>>(), _validator, _processor);
+            _controller = new UserController(A.Fake<ILogger<UserController>>(), _validator, _processor, A.Fake<UserRepository>());
             _validUser = new GoogleUser
             {
                 FirstName = "test",

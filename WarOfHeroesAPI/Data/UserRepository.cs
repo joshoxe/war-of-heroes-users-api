@@ -14,26 +14,29 @@ namespace WarOfHeroesUsersAPI.Data
             _userContext = userContext;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public IEnumerable<Entities.User> GetAllUsers()
         {
-            return _userContext.Users.Include(u => u.Inventory).Include(u => u.Deck).ToList();
+            return _userContext.Users.Include(u => u.UserHeroInventories).ToList();
+
         }
 
-        public User GetUserByGoogleId(string googleId)
+        public Entities.User GetUserByGoogleId(string googleId)
         {
-            return _userContext.Users.Include(u => u.Inventory).Include(u => u.Deck)
+            return _userContext.Users.Include(u => u.UserHeroInventories)
                 .SingleOrDefault(u => u.GoogleId == googleId);
         }
 
-        public void AddNewUser(User user)
+        public void AddNewUser(Entities.User user)
         {
             _userContext.Users.Add(user);
             _userContext.SaveChanges();
         }
 
-        public User GetUserById(int userId)
+        public Entities.User GetUserById(int userId)
         {
-            return _userContext.Users.Include(u => u.Inventory).Single(u => u.Id == userId);
+            var firstOrDefault = _userContext.Users.Where(u => u.Id == userId).Include(u => u.UserHeroInventories);
+            var userHeroInventories = firstOrDefault.First().UserHeroInventories;
+            return firstOrDefault.First();
         }
     }
 }

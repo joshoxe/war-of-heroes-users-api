@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Data.Entities;
 using WarOfHeroesUsersAPI.Processing;
-using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 
 namespace WarOfHeroesUsersAPITests.Processing
@@ -17,8 +15,8 @@ namespace WarOfHeroesUsersAPITests.Processing
         [SetUp]
         public void SetUp()
         {
-            _userStore = A.Fake<IUserStore>();
-            _processor = new GoogleUserProcessor(_userStore, A.Fake<ILogger<GoogleUserProcessor>>());
+            _repository = A.Fake<IUserRepository>();
+            _processor = new GoogleUserProcessor(A.Fake<ILogger<GoogleUserProcessor>>(), _repository);
             _validUser = new GoogleUser
             {
                 FirstName = "test",
@@ -35,7 +33,7 @@ namespace WarOfHeroesUsersAPITests.Processing
             };
         }
 
-        private IUserStore _userStore;
+        private IUserRepository _repository;
         private GoogleUserProcessor _processor;
         private GoogleUser _validUser;
 
@@ -47,11 +45,23 @@ namespace WarOfHeroesUsersAPITests.Processing
                 FirstName = "test",
                 GoogleId = "test"
             };
-            var result = _processor.Process(_validUser);
+            A.CallTo(() => _repository.GetUserByGoogleId(_validUser.ID)).Returns(null);
+            var result = _processor.Process(_validUser);;
 
             Assert.IsTrue(result.IsValid);
             Assert.AreEqual(dbUser.FirstName, result.User.FirstName);
             Assert.AreEqual(dbUser.GoogleId, result.User.GoogleId);
+        }
+
+        [Test]
+        public void TestProcessReturnsInvalidWhenExceptionThrown()
+        {
+            A.CallTo(() => _repository.GetUserByGoogleId("test")).Throws<Exception>();
+
+            var result = _processor.Process(_validUser);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsNull(result.User);
         }
     }
 }
