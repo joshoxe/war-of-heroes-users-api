@@ -1,4 +1,6 @@
-﻿using FakeItEasy;
+﻿using System;
+using System.Collections.Generic;
+using FakeItEasy;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +17,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
     public class UserControllerTests
     {
         private UserController _controller;
+        private IUserRepository _fakeRepository;
         private IUserProcessor<GoogleUser> _processor;
         private IUserValidator _validator;
         private GoogleUser _validUser;
@@ -22,9 +25,11 @@ namespace WarOfHeroesUsersAPITests.Controllers
         [SetUp]
         public void Setup()
         {
+            _fakeRepository = A.Fake<IUserRepository>();
             _validator = A.Fake<IUserValidator>();
             _processor = A.Fake<IUserProcessor<GoogleUser>>();
-            _controller = new UserController(A.Fake<ILogger<UserController>>(), _validator, _processor, A.Fake<UserRepository>());
+            _controller = new UserController(A.Fake<ILogger<UserController>>(), _validator, _processor,
+                _fakeRepository);
             _validUser = new GoogleUser
             {
                 FirstName = "test",
@@ -68,12 +73,14 @@ namespace WarOfHeroesUsersAPITests.Controllers
         [Test]
         public void TestInvalidUserReturnsBadRequest()
         {
-            var dbUser = new User {
+            var dbUser = new User
+            {
                 FirstName = "test",
                 GoogleId = "test"
             };
 
-            var userProcessingResult = new UserProcessingResult {
+            var userProcessingResult = new UserProcessingResult
+            {
                 IsValid = true,
                 User = dbUser
             };
@@ -81,27 +88,74 @@ namespace WarOfHeroesUsersAPITests.Controllers
             var invalidUser = _validUser;
             invalidUser.FirstName = "";
 
-            A.CallTo(() => _validator.Validate(invalidUser)).Returns(new ValidationResult {Errors = {new ValidationFailure("firstName", "error")}});
+            A.CallTo(() => _validator.Validate(invalidUser)).Returns(new ValidationResult
+                {Errors = {new ValidationFailure("firstName", "error")}});
             A.CallTo(() => _processor.Process(invalidUser)).Returns(userProcessingResult);
 
-            var result = (BadRequestObjectResult)_controller.Login(invalidUser);
+            var result = (BadRequestObjectResult) _controller.Login(invalidUser);
 
             Assert.AreEqual(400, result.StatusCode);
         }
 
         [Test]
-        public void TestBadProcessingReturnsBadRequest() {
-
-            var userProcessingResult = new UserProcessingResult {
+        public void TestBadProcessingReturnsBadRequest()
+        {
+            var userProcessingResult = new UserProcessingResult
+            {
                 IsValid = false,
             };
 
             A.CallTo(() => _validator.Validate(_validUser)).Returns(new ValidationResult());
             A.CallTo(() => _processor.Process(_validUser)).Returns(userProcessingResult);
 
-            var result = (BadRequestObjectResult)_controller.Login(_validUser);
+            var result = (BadRequestObjectResult) _controller.Login(_validUser);
 
             Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestGetUserInventoryReturnsOk()
+        {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserInventory(id)).Returns(new List<int> {1, 2, 3});
+
+            var result = (ObjectResult) _controller.GetInventory(id);
+            var inventory = (IEnumerable<int>) result.Value;
+
+            Assert.AreEqual(200, result.StatusCode);
+            CollectionAssert.AreEqual(new[] {1,2,3}, inventory);
+        }
+
+        [Test]
+        public void TestGetUserInventoryReturnsNotFoundWhenListIsEmpty()
+        {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserInventory(id)).Returns(new List<int>());
+
+            var emptyResult = (ObjectResult)_controller.GetInventory(id);
+
+            Assert.AreEqual(404, emptyResult.StatusCode);
+        }
+
+        [Test]
+        public void TestGetUserInventoryReturnsNotFoundWhenListIsNull()
+        {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserInventory(id)).Returns(null);
+
+            var nullResult = (ObjectResult)_controller.GetInventory(id);
+
+            Assert.AreEqual(404, nullResult.StatusCode);
+        }
+
+        [Test]
+        public void TestGetUserInventoryReturnsBadRequestWhenExceptionThrown() {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserInventory(id)).Throws<Exception>();
+
+            var nullResult = (BadRequestResult)_controller.GetInventory(id);
+
+            Assert.AreEqual(400, nullResult.StatusCode);
         }
     }
 }
