@@ -58,7 +58,6 @@ namespace WarOfHeroesUsersAPI.Controllers
         }
 
         [Route("/user/{id}/inventory")]
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult GetInventory([FromRoute] int id)
         {
