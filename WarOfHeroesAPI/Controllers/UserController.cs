@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -56,33 +57,24 @@ namespace WarOfHeroesUsersAPI.Controllers
             return Ok(userProcessResult.User);
         }
 
-
-        [AllowAnonymous] // Turn off
-        [Route("{userId}")]
+        [Route("/user/{id}/inventory")]
         [HttpGet]
-        public ActionResult Get([FromRoute] int userId)
+        public ActionResult GetInventory([FromRoute] int id)
         {
             try
             {
-                var user = _repository.GetUserById(userId);
-                return Ok(user);
+                var inventory = _repository.GetUserInventory(id);
+
+                if (inventory == null || !inventory.Any())
+                {
+                    return NotFound($"User inventory with ID {id} not found");
+                }
+
+                return Ok(inventory);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to find user with ID {userId}", userId);
-                return BadRequest();
-            }
-        }
-
-        [AllowAnonymous]
-        [Route("")]
-        [HttpGet]
-        public ActionResult Get()
-        {
-            try {
-                return Ok(_repository.GetAllUsers());
-            } catch(Exception e) {
-                _logger.LogError(e, "Unable to find users");
+                _logger.LogError(e, "Error occurred getting inventory for ID {id}", id);
                 return BadRequest();
             }
         }
