@@ -34,6 +34,7 @@ stages:
             echo "Client ID  $(TERRAFORM-CLIENT-ID)" >> $(Pipeline.Workspace)/secrets.txt
             echo "Access Key  $(TF-ACCESS-KEY)" >> $(Pipeline.Workspace)/secrets.txt
             echo "Client Secret $(TERRAFORM-CLIENT-SECRET)" >> $(Pipeline.Workspace)/secrets.txt
+
             terraform init
             terraform plan
             terraform apply -auto-approve
