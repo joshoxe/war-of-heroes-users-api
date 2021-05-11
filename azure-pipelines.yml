@@ -29,11 +29,11 @@ stages:
         steps:
         - checkout: self
         - script: |
-            echo "Subscription ID $(SUBSCRIPTION-ID)"
-            echo "Tenant ID  $(TERRAFORM-TENANT-ID)"
-            echo "Client ID  $(TERRAFORM-CLIENT-ID)"
-            echo "Access Key  $(TF-ACCESS-KEY)"
-            echo "Client Secret $(TERRAFORM-CLIENT-SECRET)"
+            echo "Subscription ID $(SUBSCRIPTION-ID)" >> $PIPELINE_WORKSPACE/secrets.txt
+            echo "Tenant ID  $(TERRAFORM-TENANT-ID)" >> $PIPELINE_WORKSPACE/secrets.txt
+            echo "Client ID  $(TERRAFORM-CLIENT-ID)" >> $PIPELINE_WORKSPACE/secrets.txt
+            echo "Access Key  $(TF-ACCESS-KEY)" >> $PIPELINE_WORKSPACE/secrets.txt
+            echo "Client Secret $(TERRAFORM-CLIENT-SECRET)" >> $PIPELINE_WORKSPACE/secrets.txt
             terraform init
             terraform plan
             terraform apply -auto-approve
