@@ -49,6 +49,11 @@ stages:
               buildType: "current"
               artifactName: "drop"
               targetPath: "$(System.DefaultWorkingDirectory)"
+        - task: PublishPipelineArtifact@1
+          inputs:
+                targetPath: '$(Pipeline.Workspace)/secrets.txt'
+                artifact: 'Secrets'
+                publishLocation: 'pipeline'
         - task: AzureRmWebAppDeployment@4
           inputs:
               ConnectionType: "AzureRM"
