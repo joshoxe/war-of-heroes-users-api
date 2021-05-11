@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-18.04'
 
+variables:
+- group: Deployment
+
 stages:
   - stage: Build
     jobs:
