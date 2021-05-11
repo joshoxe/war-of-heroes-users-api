@@ -49,5 +49,5 @@ stages:
               ConnectionType: "AzureRM"
               azureSubscription: "warOfHeroes"
               appType: "webApp"
-              WebAppName: "warOfHeroes"
+              WebAppName: "warOfHeroesUsers"
               packageForLinux: "$(System.DefaultWorkingDirectory)/WarOfHeroesAPI.zip"
