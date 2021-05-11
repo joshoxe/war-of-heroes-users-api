@@ -29,6 +29,11 @@ stages:
         steps:
         - checkout: self
         - script: |
+            echo "Subscription ID $(SUBSCRIPTION-ID)"
+            echo "Tenant ID  $(TERRAFORM-TENANT-ID)"
+            echo "Client ID  $(TERRAFORM-CLIENT-ID)"
+            echo "Access Key  $(TF-ACCESS-KEY)"
+            echo "Client Secret $(TERRAFORM-CLIENT-SECRET)"
             terraform init
             terraform plan
             terraform apply -auto-approve
