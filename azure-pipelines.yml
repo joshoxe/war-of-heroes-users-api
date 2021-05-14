@@ -42,6 +42,8 @@ stages:
             ARM_ACCESS_KEY: $(TF-ACCESS-KEY)        
             ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
             ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
+            TF_VAR_DB_USERNAME: $(DbUsername)
+            TF_VAR_DB_PASSWORD: $(DbPassword)
         - task: DownloadPipelineArtifact@2
           inputs:
               buildType: "current"
@@ -50,7 +52,7 @@ stages:
         - task: AzureRmWebAppDeployment@4
           inputs:
               ConnectionType: "AzureRM"
-              azureSubscription: "warOfHeroes"
+              azureSubscription: "warOfHeroesUsers"
               appType: "webApp"
               WebAppName: "warOfHeroesUsers"
               packageForLinux: "$(System.DefaultWorkingDirectory)/WarOfHeroesAPI.zip"
