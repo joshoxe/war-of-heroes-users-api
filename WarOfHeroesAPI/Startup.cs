@@ -29,6 +29,10 @@ namespace WarOfHeroesUsersAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            using(var context = new UserContext(Configuration)) {
+                context.Database.Migrate();
+            }
+
             services.AddDbContext<UserContext>();
             services.AddCors(options =>
             {
