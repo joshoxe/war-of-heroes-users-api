@@ -10,5 +10,6 @@ namespace WarOfHeroesUsersAPI.Data
         void AddNewUser(User user);
         User GetUserById(int userId);
         IEnumerable<int> GetUserInventory(int userId);
+        IEnumerable<int> GetUserDeck(int userId);
     }
 }
