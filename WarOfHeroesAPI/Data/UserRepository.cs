@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using WarOfHeroesUsersAPI.Data.Entities;
@@ -55,6 +56,34 @@ namespace WarOfHeroesUsersAPI.Data
             {
                 yield return hero.HeroId;
             }
+        }
+
+        public void AddToUserDeck(int userId, int heroId)
+        {
+            _userContext.Users.FirstOrDefault(u => u.Id == userId)
+                ?.UserHeroDecks.Add(new UserHeroDeck
+            {
+                HeroId = heroId
+            });
+        }
+
+        public void RemoveFromUserDeck(int userId, int heroId)
+        {
+            var userHeroDecks = _userContext.Users.FirstOrDefault(u => u.Id == userId)
+                ?.UserHeroDecks;
+            var item = userHeroDecks?.FirstOrDefault(d => d.HeroId == heroId);
+
+            if (userHeroDecks == null)
+            {
+                throw new Exception("User deck was null");
+            }
+
+            if (item == null)
+            {
+                throw new Exception("Hero not found in deck");
+            }
+
+            userHeroDecks.Remove(item);
         }
     }
 }

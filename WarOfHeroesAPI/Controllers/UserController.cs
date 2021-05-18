@@ -105,5 +105,48 @@ namespace WarOfHeroesUsersAPI.Controllers
                 return BadRequest();
             }
         }
+
+        [Route("/user/{userId}/deck/add/{heroId}")]
+        [HttpGet]
+        public ActionResult AddToDeck([FromRoute] int userId, [FromRoute] int heroId)
+        {
+            try
+            {
+                var deck = _repository.GetUserDeck(userId);
+
+                if (deck.Count() >= 5)
+                {
+                    return BadRequest($"Deck for user {userId} is full, cannot add more heroes");
+                }
+
+                _repository.AddToUserDeck(userId, heroId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error occurred adding hero {heroId} to user deck {userId}", heroId, userId);
+                return BadRequest("An error occurred adding hero to deck");
+            }
+        }
+
+        [Route("/user/{userId}/deck/add/{heroId}")]
+        [HttpGet]
+        public ActionResult RemoveFromDeck([FromRoute] int userId, [FromRoute] int heroId) {
+            try {
+                var deck = _repository.GetUserDeck(userId);
+
+                if(deck.All(i => i != heroId)) {
+                    return BadRequest($"Deck for user {userId} does not contain hero with ID {heroId}");
+                }
+
+                _repository.RemoveFromUserDeck(userId, heroId);
+
+                return Ok();
+            } catch(Exception e) {
+                _logger.LogError(e, "Error occurred removing hero {heroId} from user deck {userId}", heroId, userId);
+                return BadRequest("An error occurred removing hero from deck");
+            }
+        }
     }
 }

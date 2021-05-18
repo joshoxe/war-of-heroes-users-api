@@ -11,5 +11,7 @@ namespace WarOfHeroesUsersAPI.Data
         User GetUserById(int userId);
         IEnumerable<int> GetUserInventory(int userId);
         IEnumerable<int> GetUserDeck(int userId);
+        void AddToUserDeck(int userId, int heroId);
+        void RemoveFromUserDeck(int userId, int heroId);
     }
 }
