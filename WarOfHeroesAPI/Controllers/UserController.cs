@@ -8,7 +8,6 @@ using WarOfHeroesUsersAPI.Processing;
 using WarOfHeroesUsersAPI.Users.Models;
 using WarOfHeroesUsersAPI.Validation;
 
-
 namespace WarOfHeroesUsersAPI.Controllers
 {
     [Route("user")]
@@ -17,8 +16,8 @@ namespace WarOfHeroesUsersAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IUserProcessor<GoogleUser> _userProcessor;
         private readonly IUserRepository _repository;
+        private readonly IUserProcessor<GoogleUser> _userProcessor;
         private readonly IUserValidator _userValidator;
 
         public UserController(ILogger<UserController> logger, IUserValidator userValidator,
@@ -75,6 +74,34 @@ namespace WarOfHeroesUsersAPI.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, "Error occurred getting inventory for ID {id}", id);
+                return BadRequest();
+            }
+        }
+
+        [Route("/user/{id}/deck")]
+        [HttpGet]
+        public ActionResult GetDeck([FromRoute] int id)
+        {
+            try
+            {
+                var deck = _repository.GetUserDeck(id);
+
+                if (deck == null)
+                {
+                    return NotFound($"User deck with ID {id} not found");
+                }
+
+                if (deck.Count() > 5)
+                {
+                    _logger.LogError($"More than 5 heroes found in user deck with ID {id}");
+                    return BadRequest("More than 5 heroes found in user deck");
+                }
+
+                return Ok(deck);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error occurred getting deck for ID {id}", id);
                 return BadRequest();
             }
         }
