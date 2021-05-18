@@ -46,5 +46,15 @@ namespace WarOfHeroesUsersAPI.Data
                 yield return hero.HeroId;
             }
         }
+
+        public IEnumerable<int> GetUserDeck(int userId)
+        {
+            var deck = GetUserById(userId).UserHeroDecks;
+
+            foreach (var hero in deck)
+            {
+                yield return hero.HeroId;
+            }
+        }
     }
 }
