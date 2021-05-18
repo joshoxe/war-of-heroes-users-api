@@ -16,14 +16,13 @@ namespace WarOfHeroesUsersAPI.Data
 
         public IEnumerable<User> GetAllUsers()
         {
-            return _userContext.Users.Include(u => u.UserHeroInventories).ToList();
-
+            return _userContext.Users.Include(u => u.UserHeroInventories).Include(u => u.UserHeroDecks).ToList();
         }
 
         public User GetUserByGoogleId(string googleId)
         {
-            return _userContext.Users.Include(u => u.UserHeroInventories)
-                .SingleOrDefault(u => u.GoogleId == googleId);
+            return _userContext.Users.Include(u => u.UserHeroInventories).Include(u => u.UserHeroDecks)
+                .FirstOrDefault(u => u.GoogleId == googleId);
         }
 
         public void AddNewUser(User user)
@@ -34,7 +33,8 @@ namespace WarOfHeroesUsersAPI.Data
 
         public User GetUserById(int userId)
         {
-            return _userContext.Users.Where(u => u.Id == userId).Include(u => u.UserHeroInventories).First();
+            return _userContext.Users.Where(u => u.Id == userId).Include(u => u.UserHeroInventories)
+                .Include(u => u.UserHeroDecks).First();
         }
 
         public IEnumerable<int> GetUserInventory(int userId)
