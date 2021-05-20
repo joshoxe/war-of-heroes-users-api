@@ -123,7 +123,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             var inventory = (IEnumerable<int>) result.Value;
 
             Assert.AreEqual(200, result.StatusCode);
-            CollectionAssert.AreEqual(new[] {1,2,3}, inventory);
+            CollectionAssert.AreEqual(new[] {1, 2, 3}, inventory);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             var id = 1;
             A.CallTo(() => _fakeRepository.GetUserInventory(id)).Returns(new List<int>());
 
-            var emptyResult = (ObjectResult)_controller.GetInventory(id);
+            var emptyResult = (ObjectResult) _controller.GetInventory(id);
 
             Assert.AreEqual(404, emptyResult.StatusCode);
         }
@@ -143,19 +143,65 @@ namespace WarOfHeroesUsersAPITests.Controllers
             var id = 1;
             A.CallTo(() => _fakeRepository.GetUserInventory(id)).Returns(null);
 
-            var nullResult = (ObjectResult)_controller.GetInventory(id);
+            var nullResult = (ObjectResult) _controller.GetInventory(id);
 
             Assert.AreEqual(404, nullResult.StatusCode);
         }
 
         [Test]
-        public void TestGetUserInventoryReturnsBadRequestWhenExceptionThrown() {
+        public void TestGetUserInventoryReturnsBadRequestWhenExceptionThrown()
+        {
             var id = 1;
             A.CallTo(() => _fakeRepository.GetUserInventory(id)).Throws<Exception>();
 
-            var nullResult = (BadRequestResult)_controller.GetInventory(id);
+            var nullResult = (BadRequestResult) _controller.GetInventory(id);
 
             Assert.AreEqual(400, nullResult.StatusCode);
+        }
+
+        [Test]
+        public void TestGetDeckReturnsUserDeck()
+        {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserDeck(id)).Returns(new[] {1, 2, 3});
+
+            var result = (ObjectResult) _controller.GetDeck(id);
+            var deckResult = (IEnumerable<int>) result.Value;
+
+            Assert.AreEqual(200, result.StatusCode);
+            CollectionAssert.AreEqual(new[] {1, 2, 3}, deckResult);
+        }
+
+        [Test]
+        public void TestGetDeckReturnsNotFoundIfNoDeckFound()
+        {
+            var id = 0;
+            A.CallTo(() => _fakeRepository.GetUserDeck(id)).Returns(null);
+
+            var result = (ObjectResult)_controller.GetDeck(id);
+
+            Assert.AreEqual(404, result.StatusCode);
+        }
+
+        [Test]
+        public void TestGetDeckReturnsBadRequestIfDeckLargerThanFive()
+        {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserDeck(id)).Returns(new[] { 1, 2, 3, 4, 5, 6 });
+
+            var result = (ObjectResult)_controller.GetDeck(id);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestGetDeckReturnsBadRequestIfExceptionThrown() {
+            var id = 1;
+            A.CallTo(() => _fakeRepository.GetUserDeck(id)).Throws<Exception>();
+
+            var result = (BadRequestResult) _controller.GetDeck(id);
+
+            Assert.AreEqual(400, result.StatusCode);
         }
     }
 }
