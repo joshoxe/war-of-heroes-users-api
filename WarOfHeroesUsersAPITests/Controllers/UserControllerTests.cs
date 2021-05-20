@@ -203,5 +203,54 @@ namespace WarOfHeroesUsersAPITests.Controllers
 
             Assert.AreEqual(400, result.StatusCode);
         }
+
+        [Test]
+        public void TestAddToDeckReturnsOkIfDeckFoundAndLessThanFive()
+        {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] {1, 2, 3, 4});
+
+            var result = (OkResult) _controller.AddToDeck(userId, heroId);
+
+            Assert.AreEqual(200, result.StatusCode);
+        }
+
+        [Test]
+        public void TestAddToDeckReturnsBadRequestIfDeckFoundAndEqualToFive() {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] { 1, 2, 3, 4, 5 });
+
+            var result = (BadRequestObjectResult)_controller.AddToDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestAddToDeckReturnsBadRequestIfDeckFoundAndMoreThanFive() {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] { 1, 2, 3, 4, 5, 6 });
+
+            var result = (BadRequestObjectResult)_controller.AddToDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestAddToDeckReturnsBadRequestIfExceptionThrown() {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Throws<Exception>();
+
+            var result = (BadRequestObjectResult)_controller.AddToDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
     }
 }
