@@ -252,5 +252,42 @@ namespace WarOfHeroesUsersAPITests.Controllers
 
             Assert.AreEqual(400, result.StatusCode);
         }
+
+        [Test]
+        public void TestRemoveFromDeckReturnsOkIfIdFoundInDeck()
+        {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] {1, 2});
+
+            var result = (OkResult) _controller.RemoveFromDeck(userId, heroId);
+
+            Assert.AreEqual(200, result.StatusCode);
+        }
+
+        [Test]
+        public void TestRemoveFromDeckReturnsBadRequestIfIdNotFound() {
+            int userId = 1;
+            int heroId = 5;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] { 1, 2 });
+
+            var result = (ObjectResult)_controller.RemoveFromDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestRemoveFromDeckReturnsBadRequestIfExceptionThrown() {
+            int userId = 1;
+            int heroId = 1;
+
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Throws<Exception>();
+
+            var result = (BadRequestObjectResult)_controller.RemoveFromDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
     }
 }
