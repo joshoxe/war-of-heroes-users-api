@@ -12,6 +12,11 @@ namespace WarOfHeroesUsersAPI.Data
         IEnumerable<int> GetUserInventory(int userId);
         IEnumerable<int> GetUserDeck(int userId);
         void AddToUserDeck(int userId, int heroId);
+        void AddToUserInventory(int userId, int heroId);
         void RemoveFromUserDeck(int userId, int heroId);
+        bool InventoryContainsHero(int userId, int heroId);
+        bool DeckContainsHero(int userId, int heroId);
+        void UpdateDeck(int userId, int[] ids);
+        void UpdateInventory(int userId, int[] ids);
     }
 }

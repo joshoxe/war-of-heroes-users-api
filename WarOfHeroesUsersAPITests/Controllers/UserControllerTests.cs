@@ -259,7 +259,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             int userId = 1;
             int heroId = 1;
 
-            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] {1, 2});
+            A.CallTo(() => _fakeRepository.DeckContainsHero(userId, heroId)).Returns(true);
 
             var result = (OkResult) _controller.RemoveFromDeck(userId, heroId);
 
