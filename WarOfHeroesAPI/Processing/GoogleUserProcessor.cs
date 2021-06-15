@@ -26,7 +26,10 @@ namespace WarOfHeroesUsersAPI.Processing
             try
             {
                 var user = _repository.GetUserByGoogleId(googleUser.ID) ?? AddNewUser(googleUser);
-                user.AccessToken = AccessTokenGenerator.GenerateAccessToken();
+
+                var accessToken = AccessTokenGenerator.GenerateAccessToken();
+                user.AccessToken = accessToken;
+                _repository.UpdateUserAccessToken(user.Id, accessToken);
 
                 userProcessingResult.IsValid = true;
                 userProcessingResult.User = user;
