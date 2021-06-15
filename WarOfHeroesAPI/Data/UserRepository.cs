@@ -98,5 +98,11 @@ namespace WarOfHeroesUsersAPI.Data
             user.AccessToken = accessToken;
             _userContext.SaveChanges();
         }
+
+        public User GetUserByAccessToken(string accessToken)
+        {
+            return _userContext.Users.Include(u => u.UserHeroDecks).Include(u => u.UserHeroInventories)
+                .FirstOrDefault(u => u.AccessToken == accessToken);
+        }
     }
 }
