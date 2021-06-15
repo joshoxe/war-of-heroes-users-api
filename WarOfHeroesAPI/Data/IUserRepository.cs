@@ -14,5 +14,6 @@ namespace WarOfHeroesUsersAPI.Data
         void AddToUserDeck(int userId, int heroId);
         void RemoveFromUserDeck(int userId, int heroId);
         void UpdateUserAccessToken(int userId, string accessToken);
+        User GetUserByAccessToken(string accessToken);
     }
 }

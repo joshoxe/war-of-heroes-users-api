@@ -60,7 +60,15 @@ namespace WarOfHeroesUsersAPI.Controllers
         [HttpPost]
         public ActionResult Refresh([FromBody] string accessToken)
         {
+            var user = _repository.GetUserByAccessToken(accessToken);
 
+            if (user == null)
+            {
+                _logger.LogError($"Refresh endpoint failed to find a user with access token: {accessToken}");
+                return BadRequest("No user found for provided access token");
+            }
+
+            return Ok(user);
         }
 
         [Route("/user/{id}/inventory")]
