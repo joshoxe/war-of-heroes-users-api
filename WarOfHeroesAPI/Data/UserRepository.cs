@@ -85,5 +85,18 @@ namespace WarOfHeroesUsersAPI.Data
 
             userHeroDecks.Remove(item);
         }
+
+        public void UpdateUserAccessToken(int userId, string accessToken)
+        {
+            var user = GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException($"The user with ID {userId} was not found");
+            }
+
+            user.AccessToken = accessToken;
+            _userContext.SaveChanges();
+        }
     }
 }

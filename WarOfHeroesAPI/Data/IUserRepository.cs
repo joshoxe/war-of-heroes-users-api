@@ -13,5 +13,6 @@ namespace WarOfHeroesUsersAPI.Data
         IEnumerable<int> GetUserDeck(int userId);
         void AddToUserDeck(int userId, int heroId);
         void RemoveFromUserDeck(int userId, int heroId);
+        void UpdateUserAccessToken(int userId, string accessToken);
     }
 }

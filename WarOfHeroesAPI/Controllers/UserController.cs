@@ -56,6 +56,13 @@ namespace WarOfHeroesUsersAPI.Controllers
             return Ok(userProcessResult.User);
         }
 
+        [Route("refresh")]
+        [HttpPost]
+        public ActionResult Refresh([FromBody] string accessToken)
+        {
+
+        }
+
         [Route("/user/{id}/inventory")]
         [HttpGet]
         public ActionResult GetInventory([FromRoute] int id)
