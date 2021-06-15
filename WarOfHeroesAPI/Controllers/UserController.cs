@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -158,11 +159,30 @@ namespace WarOfHeroesUsersAPI.Controllers
         {
             try
             {
-                foreach (var id in ids)
+                var userInventory = _repository.GetUserInventory(userId);
+                var userDeck = new List<int>();
+                userDeck.AddRange(_repository.GetUserDeck(userId));
+
+                foreach (var heroId in ids)
                 {
-                    if (!_repository.InventoryContainsHero(userId, id))
+                    if (!userInventory.Contains(heroId))
                     {
-                        return BadRequest($"[ERROR] {userId} does not have hero with ID {id} in their inventory");
+                        // Hero isn't in the user's inventory, but check if it's already in their deck
+
+                        if (userDeck.Contains(heroId))
+                        {
+                            // If it is in the deck, remove it from the next check
+                            userDeck.Remove(heroId);
+                        }
+                        else
+                        {
+                            return BadRequest($"[ERROR] User with ID {userId} does not own hero with ID {heroId}");
+                        }
+                    }
+                    else
+                    {
+                        // The user has the card in the inventory, so remove it
+                        _repository.RemoveFromUserInventory(userId, heroId);
                     }
                 }
 

@@ -99,24 +99,22 @@ namespace WarOfHeroesUsersAPI.Data
 
         }
 
-        /// <summary>
-        /// Checks if a user's inventory contains a hero
-        /// </summary>
-        /// <param name="userId">ID of user to check</param>
-        /// <param name="heroId">ID of hero to check</param>
-        /// <returns>True if the inventory contains the hero</returns>
-        public bool InventoryContainsHero(int userId, int heroId)
+        public void RemoveFromUserInventory(int userId, int heroId)
         {
-            var userInventory = _userContext.Users.Include(u => u.UserHeroInventories).FirstOrDefault(u => u.Id == userId)?.UserHeroInventories;
+            var userHeroInventory = _userContext.Users.Include(u => u.UserHeroInventories).FirstOrDefault(u => u.Id == userId)
+                ?.UserHeroInventories;
+            var item = userHeroInventory?.FirstOrDefault(d => d.HeroId == heroId);
 
-            if (userInventory == null)
-            {
-                return false;
+            if(userHeroInventory == null) {
+                throw new Exception("User inventory was null");
             }
 
-            var heroCard = userInventory.Where(h => h.HeroId == heroId);
+            if(item == null) {
+                throw new Exception("Hero not found in inventory");
+            }
 
-            return heroCard.Any();
+            userHeroInventory.Remove(item);
+            _userContext.SaveChanges();
         }
 
         /// <summary>
