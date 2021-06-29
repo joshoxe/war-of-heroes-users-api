@@ -65,7 +65,6 @@ namespace WarOfHeroesUsersAPI.Processing
                         HeroId = 3
                     }
                 },
-                AccessToken = AccessTokenGenerator.GenerateAccessToken()
             };
 
             _repository.AddNewUser(user);

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Processing;
+using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 using WarOfHeroesUsersAPI.Validation;
 
@@ -56,15 +57,31 @@ namespace WarOfHeroesUsersAPI.Controllers
             return Ok(userProcessResult.User);
         }
 
-        [Route("refresh")]
+        [Route("/user/{userId}/logout")]
         [HttpPost]
-        public ActionResult Refresh([FromBody] string accessToken)
+        public ActionResult Logout([FromRoute] int userId, [FromBody] SessionAccessToken accessToken)
         {
-            var user = _repository.GetUserByAccessToken(accessToken);
+            var user = _repository.GetUserByAccessToken(accessToken.AccessToken);
+
+            if(user == null) {
+                _logger.LogError($"Logout endpoint failed to find a user with access token: {accessToken.AccessToken}");
+                return BadRequest("No user found for provided access token");
+            }
+
+            _repository.UpdateUserAccessToken(userId, "");
+
+            return Ok();
+        }
+
+        [Route("/user/refresh")]
+        [HttpPost]
+        public ActionResult Refresh([FromBody] SessionAccessToken accessToken)
+         {
+            var user = _repository.GetUserByAccessToken(accessToken.AccessToken);
 
             if (user == null)
             {
-                _logger.LogError($"Refresh endpoint failed to find a user with access token: {accessToken}");
+                _logger.LogError($"Refresh endpoint failed to find a user with access token: {accessToken.AccessToken}");
                 return BadRequest("No user found for provided access token");
             }
 
