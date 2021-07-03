@@ -9,6 +9,7 @@ using WarOfHeroesUsersAPI.Controllers;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Data.Entities;
 using WarOfHeroesUsersAPI.Processing;
+using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 using WarOfHeroesUsersAPI.Validation;
 
@@ -28,7 +29,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             _fakeRepository = A.Fake<IUserRepository>();
             _validator = A.Fake<IUserValidator>();
             _processor = A.Fake<IUserProcessor<GoogleUser>>();
-            _controller = new UserController(A.Fake<ILogger<UserController>>(), _validator, _processor,
+            _controller = new UserController(A.Fake<ILogger<WarOfHeroesUsersAPI.Controllers.UserController>>(), _validator, _processor,
                 _fakeRepository);
             _validUser = new GoogleUser
             {
@@ -260,6 +261,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             int heroId = 1;
 
             A.CallTo(() => _fakeRepository.DeckContainsHero(userId, heroId)).Returns(true);
+            A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] {1, 2});
 
             var result = (OkResult) _controller.RemoveFromDeck(userId, heroId);
 
@@ -286,6 +288,74 @@ namespace WarOfHeroesUsersAPITests.Controllers
             A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Throws<Exception>();
 
             var result = (BadRequestObjectResult)_controller.RemoveFromDeck(userId, heroId);
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+
+        [Test]
+        public void TestRefreshEndpointReturnsUserWithCorrectAccessToken()
+        {
+            var accessToken = AccessTokenGenerator.GenerateAccessToken();
+
+            var dbUser = new User {
+                FirstName = "test",
+                AccessToken = accessToken
+            };
+
+            A.CallTo(() => _fakeRepository.GetUserByAccessToken(accessToken)).Returns(dbUser);
+
+            var result = (ObjectResult) _controller.Refresh(new SessionAccessToken {AccessToken = accessToken});
+            var user = (User) result.Value;
+
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(dbUser, user);
+            Assert.AreEqual(accessToken, user.AccessToken);
+        }
+
+        [Test]
+        public void TestRefreshEndpointReturnBadRequestWithIncorrectAccessToken() {
+
+            A.CallTo(() => _fakeRepository.GetUserByAccessToken("111")).Returns(null);
+
+            var result = (ObjectResult)_controller.Refresh(new SessionAccessToken { AccessToken = "111" });
+
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Test]
+        public void TestLogoutEndpointReturnsOkWithCorrectAccessTokenProvided()
+        {
+            var accessToken = AccessTokenGenerator.GenerateAccessToken();
+
+            var userId = 1;
+            var dbUser = new User {
+                Id = userId,
+                FirstName = "test",
+                AccessToken = accessToken
+            };
+
+            A.CallTo(() => _fakeRepository.GetUserByAccessToken(accessToken)).Returns(dbUser);
+
+            var result = (OkResult)_controller.Logout(userId, new SessionAccessToken { AccessToken = accessToken });
+
+            Assert.AreEqual(200, result.StatusCode);
+        }
+
+        [Test]
+        public void TestLogoutEndpointReturnsBadRequestWithCorrectAccessTokenProvided() {
+            var accessToken = AccessTokenGenerator.GenerateAccessToken();
+
+            var userId = 1;
+            var dbUser = new User {
+                Id = userId,
+                FirstName = "test",
+                AccessToken = accessToken
+            };
+
+            A.CallTo(() => _fakeRepository.GetUserByAccessToken("111")).Returns(null);
+
+            var result = (BadRequestObjectResult)_controller.Logout(userId, new SessionAccessToken { AccessToken = "111" });
 
             Assert.AreEqual(400, result.StatusCode);
         }

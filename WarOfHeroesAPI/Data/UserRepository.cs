@@ -49,7 +49,9 @@ namespace WarOfHeroesUsersAPI.Data
             }
         }
 
-        public IEnumerable<int> GetUserDeck(int userId) {
+
+        public IEnumerable<int> GetUserDeck(int userId)
+        {
             var deck = GetUserById(userId).UserHeroDecks;
 
             foreach (var hero in deck)
@@ -96,7 +98,6 @@ namespace WarOfHeroesUsersAPI.Data
 
             userHeroDecks.Remove(item);
             _userContext.SaveChanges();
-
         }
 
         public void RemoveFromUserInventory(int userId, int heroId)
@@ -164,6 +165,25 @@ namespace WarOfHeroesUsersAPI.Data
 
             _userContext.Users.Include(u => u.UserHeroInventories).FirstOrDefault(u => u.Id == userId).UserHeroInventories = newInventory.ToList();
             _userContext.SaveChanges();
+        }
+
+        public void UpdateUserAccessToken(int userId, string accessToken)
+        {
+            var user = GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException($"The user with ID {userId} was not found");
+            }
+
+            user.AccessToken = accessToken;
+            _userContext.SaveChanges();
+        }
+
+        public User GetUserByAccessToken(string accessToken)
+        {
+            return _userContext.Users.Include(u => u.UserHeroDecks).Include(u => u.UserHeroInventories)
+                .FirstOrDefault(u => u.AccessToken == accessToken);
         }
     }
 }

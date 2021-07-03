@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Data.Entities;
+using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 
 namespace WarOfHeroesUsersAPI.Processing
@@ -25,6 +26,10 @@ namespace WarOfHeroesUsersAPI.Processing
             try
             {
                 var user = _repository.GetUserByGoogleId(googleUser.ID) ?? AddNewUser(googleUser);
+
+                var accessToken = AccessTokenGenerator.GenerateAccessToken();
+                user.AccessToken = accessToken;
+                _repository.UpdateUserAccessToken(user.Id, accessToken);
 
                 userProcessingResult.IsValid = true;
                 userProcessingResult.User = user;
@@ -59,7 +64,7 @@ namespace WarOfHeroesUsersAPI.Processing
                     {
                         HeroId = 3
                     }
-                }
+                },
             };
 
             _repository.AddNewUser(user);

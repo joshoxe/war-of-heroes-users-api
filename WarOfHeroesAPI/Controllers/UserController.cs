@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Processing;
+using WarOfHeroesUsersAPI.Users;
 using WarOfHeroesUsersAPI.Users.Models;
 using WarOfHeroesUsersAPI.Validation;
 
@@ -55,6 +56,37 @@ namespace WarOfHeroesUsersAPI.Controllers
             }
 
             return Ok(userProcessResult.User);
+        }
+
+        [Route("/user/{userId}/logout")]
+        [HttpPost]
+        public ActionResult Logout([FromRoute] int userId, [FromBody] SessionAccessToken accessToken)
+        {
+            var user = _repository.GetUserByAccessToken(accessToken.AccessToken);
+
+            if(user == null) {
+                _logger.LogError($"Logout endpoint failed to find a user with access token: {accessToken.AccessToken}");
+                return BadRequest("No user found for provided access token");
+            }
+
+            _repository.UpdateUserAccessToken(userId, "");
+
+            return Ok();
+        }
+
+        [Route("/user/refresh")]
+        [HttpPost]
+        public ActionResult Refresh([FromBody] SessionAccessToken accessToken)
+         {
+            var user = _repository.GetUserByAccessToken(accessToken.AccessToken);
+
+            if (user == null)
+            {
+                _logger.LogError($"Refresh endpoint failed to find a user with access token: {accessToken.AccessToken}");
+                return BadRequest("No user found for provided access token");
+            }
+
+            return Ok(user);
         }
 
         [Route("/user/{id}/inventory")]
@@ -148,10 +180,12 @@ namespace WarOfHeroesUsersAPI.Controllers
             }
             catch (Exception e)
             {
+
                 _logger.LogError(e, "Error occurred removing hero {heroId} from user deck {userId}", heroId, userId);
                 return BadRequest("An error occurred removing hero from deck");
             }
         }
+
 
         [Route("/user/{userId}/deck/update")]
         [HttpPost]
