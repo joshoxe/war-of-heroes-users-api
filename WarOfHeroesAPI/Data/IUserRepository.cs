@@ -18,7 +18,6 @@ namespace WarOfHeroesUsersAPI.Data
         bool DeckContainsHero(int userId, int heroId);
         void UpdateDeck(int userId, int[] ids);
         void UpdateInventory(int userId, int[] ids);
-        void RemoveFromUserDeck(int userId, int heroId);
         void UpdateUserAccessToken(int userId, string accessToken);
         User GetUserByAccessToken(string accessToken);
     }

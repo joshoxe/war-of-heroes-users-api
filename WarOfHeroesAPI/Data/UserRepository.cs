@@ -161,7 +161,7 @@ namespace WarOfHeroesUsersAPI.Data
         /// <param name="ids">Hero IDs to replace with</param>
         public void UpdateInventory(int userId, int[] ids) {
             var newInventory = ids.Select(i => new UserHeroInventory() { HeroId = i });
-            _userContext.Users.FirstOrDefault(u => u.Id == userId).UserHeroInventories.RemoveAll(h => true);
+            _userContext.Users.Include(u => u.UserHeroInventories).FirstOrDefault(u => u.Id == userId).UserHeroInventories.RemoveAll(h => true);
 
             _userContext.Users.Include(u => u.UserHeroInventories).FirstOrDefault(u => u.Id == userId).UserHeroInventories = newInventory.ToList();
             _userContext.SaveChanges();
