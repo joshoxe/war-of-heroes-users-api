@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -164,20 +165,91 @@ namespace WarOfHeroesUsersAPI.Controllers
 
         [Route("/user/{userId}/deck/add/{heroId}")]
         [HttpGet]
-        public ActionResult RemoveFromDeck([FromRoute] int userId, [FromRoute] int heroId) {
-            try {
-                var deck = _repository.GetUserDeck(userId);
-
-                if(deck.All(i => i != heroId)) {
+        public ActionResult RemoveFromDeck([FromRoute] int userId, [FromRoute] int heroId)
+        {
+            try
+            {
+                if (!_repository.DeckContainsHero(userId, heroId))
+                {
                     return BadRequest($"Deck for user {userId} does not contain hero with ID {heroId}");
                 }
 
                 _repository.RemoveFromUserDeck(userId, heroId);
 
                 return Ok();
-            } catch(Exception e) {
+            }
+            catch (Exception e)
+            {
+
                 _logger.LogError(e, "Error occurred removing hero {heroId} from user deck {userId}", heroId, userId);
                 return BadRequest("An error occurred removing hero from deck");
+            }
+        }
+
+
+        [Route("/user/{userId}/deck/update")]
+        [HttpPost]
+        public ActionResult UpdateDeck([FromRoute] int userId, [FromBody] int[] ids)
+        {
+            try
+            {
+                var userInventory = _repository.GetUserInventory(userId);
+                var userDeck = new List<int>();
+                userDeck.AddRange(_repository.GetUserDeck(userId));
+
+                foreach (var heroId in ids)
+                {
+                    if (!userInventory.Contains(heroId))
+                    {
+                        // Hero isn't in the user's inventory, but check if it's already in their deck
+
+                        if (userDeck.Contains(heroId))
+                        {
+                            // If it is in the deck, remove it from the next check
+                            userDeck.Remove(heroId);
+                        }
+                        else
+                        {
+                            return BadRequest($"[ERROR] User with ID {userId} does not own hero with ID {heroId}");
+                        }
+                    }
+                    else
+                    {
+                        // The user has the card in the inventory, so remove it
+                        _repository.RemoveFromUserInventory(userId, heroId);
+                    }
+                }
+
+                _repository.UpdateDeck(userId, ids);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "An error occurred updating deck for user {userId} with deck {ids}", userId,
+                    ids.ToString());
+                return BadRequest(
+                    $"[ERROR] An unknown error occurred while updating deck for user {userId} with deck {ids}");
+            }
+        }
+
+        [Route("/user/{userId}/inventory/update")]
+        [HttpPost]
+        public ActionResult UpdateInventory([FromRoute] int userId, [FromBody] int[] ids)
+        {
+            try
+            {
+                // No secure check to ensure the request to change inventory is legit
+                _repository.UpdateInventory(userId, ids);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "An error occurred updating inventory for user {userId} with inventory {ids}",
+                    userId,
+                    ids.ToString());
+                return BadRequest(
+                    $"[ERROR] An unknown error occurred while updating inventory for user {userId} with inventory {ids}");
             }
         }
     }

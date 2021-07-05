@@ -260,6 +260,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
             int userId = 1;
             int heroId = 1;
 
+            A.CallTo(() => _fakeRepository.DeckContainsHero(userId, heroId)).Returns(true);
             A.CallTo(() => _fakeRepository.GetUserDeck(userId)).Returns(new[] {1, 2});
 
             var result = (OkResult) _controller.RemoveFromDeck(userId, heroId);
@@ -290,6 +291,7 @@ namespace WarOfHeroesUsersAPITests.Controllers
 
             Assert.AreEqual(400, result.StatusCode);
         }
+
 
         [Test]
         public void TestRefreshEndpointReturnsUserWithCorrectAccessToken()
