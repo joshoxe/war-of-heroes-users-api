@@ -252,5 +252,52 @@ namespace WarOfHeroesUsersAPI.Controllers
                     $"[ERROR] An unknown error occurred while updating inventory for user {userId} with inventory {ids}");
             }
         }
+
+        [Route("/user/{userId}/win")]
+        [HttpPut]
+        public ActionResult AddUserWin([FromRoute] int userId, [FromHeader] string accessToken, [FromBody] int coins)
+        {
+            try
+            {
+                var user = _repository.GetUserByAccessToken(accessToken);
+
+                if (user.Id != userId)
+                {
+                    return Unauthorized("You do not have access to this resource");
+                }
+
+                _repository.IncreaseUserWins(accessToken);
+                _repository.GiveUserCoins(accessToken, coins);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "An error occurred while recording win for user {user}", userId);
+                return BadRequest($"[ERROR] An unknown error occurred recording a win for user with ID {userId}");
+            }
+        }
+
+        [Route("/user/{userId}/loss")]
+        [HttpPut]
+        public ActionResult AddUserLoss([FromRoute] int userId, [FromHeader] string accessToken, [FromBody] int coins)
+        {
+
+            try {
+                var user = _repository.GetUserByAccessToken(accessToken);
+
+                if(user.Id != userId) {
+                    return Unauthorized("You do not have access to this resource");
+                }
+
+                _repository.IncreaseUserLosses(accessToken);
+                _repository.GiveUserCoins(accessToken, coins);
+
+                return Ok();
+            } catch(Exception e) {
+                _logger.LogError(e, "An error occurred while recording loss for user {user}", userId);
+                return BadRequest($"[ERROR] An unknown error occurred recording a loss for user with ID {userId}");
+            }
+        }
     }
 }
