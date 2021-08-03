@@ -20,5 +20,8 @@ namespace WarOfHeroesUsersAPI.Data
         void UpdateInventory(int userId, int[] ids);
         void UpdateUserAccessToken(int userId, string accessToken);
         User GetUserByAccessToken(string accessToken);
+        void GiveUserCoins(string accessToken, int coins);
+        void IncreaseUserWins(string accessToken);
+        void IncreaseUserLosses(string accessToken);
     }
 }

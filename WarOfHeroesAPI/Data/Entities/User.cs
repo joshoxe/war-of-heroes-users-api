@@ -10,6 +10,9 @@ namespace WarOfHeroesUsersAPI.Data.Entities
         public string AccessToken { get; set; }
         public virtual List<UserHeroInventory> UserHeroInventories { get; set; }
         public virtual List<UserHeroDeck> UserHeroDecks { get; set; }
+        public int Coins { get; set; }
+        public int Wins { get; set; }
+        public int Losses { get; set; }
 
     }
 }
