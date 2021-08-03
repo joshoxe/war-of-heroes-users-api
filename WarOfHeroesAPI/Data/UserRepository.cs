@@ -185,5 +185,29 @@ namespace WarOfHeroesUsersAPI.Data
             return _userContext.Users.Include(u => u.UserHeroDecks).Include(u => u.UserHeroInventories)
                 .FirstOrDefault(u => u.AccessToken == accessToken);
         }
+
+        public void GiveUserCoins(string accessToken, int coins)
+        {
+            var user = GetUserByAccessToken(accessToken);
+
+            user.Coins += coins;
+            _userContext.SaveChanges();
+        }
+
+        public void IncreaseUserWins(string accessToken)
+        {
+            var user = GetUserByAccessToken(accessToken);
+
+            user.Wins += 1;
+            _userContext.SaveChanges();
+        }
+
+        public void IncreaseUserLosses(string accessToken)
+        {
+            var user = GetUserByAccessToken(accessToken);
+
+            user.Losses += 1;
+            _userContext.SaveChanges();
+        }
     }
 }
