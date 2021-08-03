@@ -42,11 +42,9 @@ namespace WarOfHeroesUsersAPITests.Validation
         [TestCase("A", null, "A", "A", "A", "A", "A", "A", "A", "A", "A")]
         [TestCase("A", "A", null, "A", "A", "A", "A", "A", "A", "A", "A")]
         [TestCase("A", "A", "A", null, "A", "A", "A", "A", "A", "A", "A")]
-        [TestCase("A", "A", "A", "A", null, "A", "A", "A", "A", "A", "A")]
         [TestCase("A", "A", "A", "A", "A", null, "A", "A", "A", "A", "A")]
         [TestCase("A", "A", "A", "A", "A", "A", "A", null, "A", "A", "A")]
         [TestCase("A", "A", "A", "A", "A", "A", "A", "A", null, "A", "A")]
-        [TestCase("A", "A", "A", "A", "A", "A", "A", "A", "A", null, "A")]
         [TestCase("A", "A", "A", "A", "A", "A", "A", "A", "A", "A", null)]
         public void TestValidationFailsWhenIncorrectValuesSupplied(string firstName, string id, string email,
             string name, string photoUrl, string idToken, string authorizationCode, string response, string authToken,
