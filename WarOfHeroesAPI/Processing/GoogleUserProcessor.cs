@@ -63,6 +63,18 @@ namespace WarOfHeroesUsersAPI.Processing
                     new UserHeroInventory
                     {
                         HeroId = 3
+                    },
+                    new UserHeroInventory
+                    {
+                        HeroId = 4
+                    },
+                    new UserHeroInventory
+                    {
+                        HeroId = 5
+                    },
+                    new UserHeroInventory
+                    {
+                        HeroId = 6
                     }
                 },
             };
