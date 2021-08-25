@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using WarOfHeroesUsersAPI.Data;
 using WarOfHeroesUsersAPI.Processing;
@@ -163,6 +164,25 @@ namespace WarOfHeroesUsersAPI.Controllers
             }
         }
 
+        [Route("/user/{userId}/inventory/add")]
+        [HttpPut]
+        public ActionResult AddToInventory([FromBody] int[] ids, [FromRoute] int userId)
+            {
+            try
+            {
+                foreach (var id in ids)
+                {
+                    _repository.AddToUserInventory(userId, id);
+                }
+                return Ok();
+
+            } catch (Exception e) {
+                _logger.LogError(e, "Error occurred adding heroes");
+                return BadRequest();
+            }
+        }
+
+
         [Route("/user/{userId}/deck/add/{heroId}")]
         [HttpGet]
         public ActionResult RemoveFromDeck([FromRoute] int userId, [FromRoute] int heroId)
@@ -185,6 +205,22 @@ namespace WarOfHeroesUsersAPI.Controllers
                 return BadRequest("An error occurred removing hero from deck");
             }
         }
+
+        [Route("/user/{userId}/coins/add")]
+        [HttpPut]
+        public ActionResult RemoveFromCoins([FromBody] int coins, [FromRoute] int userId)
+        {
+            try
+            {
+                _repository.RemoveFromCoins(userId, coins);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
 
 
         [Route("/user/{userId}/deck/update")]
