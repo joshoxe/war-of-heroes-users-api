@@ -209,5 +209,12 @@ namespace WarOfHeroesUsersAPI.Data
             user.Losses += 1;
             _userContext.SaveChanges();
         }
+
+        public void RemoveFromCoins(in int userId, in int coins)
+        {
+            var user = GetUserById(userId);
+            user.Coins -= coins;
+            _userContext.SaveChanges();
+        }
     }
 }

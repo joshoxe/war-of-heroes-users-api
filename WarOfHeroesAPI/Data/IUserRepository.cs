@@ -23,5 +23,6 @@ namespace WarOfHeroesUsersAPI.Data
         void GiveUserCoins(string accessToken, int coins);
         void IncreaseUserWins(string accessToken);
         void IncreaseUserLosses(string accessToken);
+        void RemoveFromCoins(in int userId, in int coins);
     }
 }
